@@ -4,39 +4,69 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.tcc.databinding.FragmentSimuladorBinding
+import com.example.tcc.R
+import com.example.tcc.funcoes.SSH
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SimuladorFragment : Fragment() {
 
-    private var _binding: FragmentSimuladorBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var editTextUsuario: EditText
+    private lateinit var editTextServidor: EditText
+    private lateinit var editTextSenha: EditText
+    private lateinit var buttonConectar: Button
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val simuladorViewModel =
-            ViewModelProvider(this).get(SimuladorViewModel::class.java)
+    ): View? {
+        // Inflate the layout for this fragment
+        val root = inflater.inflate(R.layout.fragment_simulador, container, false)
 
-        _binding = FragmentSimuladorBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        // Inicialize os elementos de UI
+        editTextUsuario = root.findViewById(R.id.editTextText)
+        editTextServidor = root.findViewById(R.id.editTextText2)
+        editTextSenha = root.findViewById(R.id.editTextTextPassword)
+        buttonConectar = root.findViewById(R.id.button)
 
-        val textView: TextView = binding.textDashboard
-        simuladorViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        // Configure o listener do botão
+        buttonConectar.setOnClickListener {
+            val usuario = editTextUsuario.text.toString()
+            val servidor = editTextServidor.text.toString()
+            val senha = editTextSenha.text.toString()
+
+            // Verifique se todos os campos foram preenchidos
+            if (usuario.isNotEmpty() && servidor.isNotEmpty() && senha.isNotEmpty()) {
+                // Conteúdo do Netlist
+                val netlistContent = """
+                    * Divisor de Tensão Simples
+                    V1 N001 0 DC 10
+                    R1 N001 N002 5
+                    R2 N002 0 5
+
+                    .control
+                    op
+                    print all
+                    .endc
+
+                    .end
+                """.trimIndent()
+
+                // Conecte-se ao servidor via SSH
+                CoroutineScope(Dispatchers.IO).launch {
+                    val ssh = SSH()
+                    ssh.enviarArquivoNetlist(usuario, servidor, senha, netlistContent)
+                    ssh.executarNgspice(usuario, servidor, senha)
+                }
+            } else {
+                // Mostre uma mensagem de erro ou faça alguma outra ação adequada
+            }
         }
-        return root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return root
     }
 }
