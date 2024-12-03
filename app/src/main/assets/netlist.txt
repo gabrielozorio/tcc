@@ -1,0 +1,44 @@
+* Netlist para retificador de onda completa
+
+* Fonte AC 220V (rms), 50Hz
+Vin n1 0 AC 311.13 SIN(0 311.13 50)
+
+* Transformador (reduz de 220V para 17V AC aproximadamente)
+* Relação de espiras do transformador: 220V/17V (aprox. 13:1)
+X1 n1 0 n2 n3 transf
+
+* Ponte de diodos (retificador de onda completa)
+D1 n2 n4 D1N4007
+D2 n3 n5 D1N4007
+D3 0 n4 D1N4007
+D4 0 n5 D1N4007
+
+* Carga e capacitor de filtragem
+C1 n4 n5 1000uF
+Rload n5 n4 100
+
+* Modelos de diodos
+.model D1N4007 D(IS=1e-14 N=1)
+
+* Definição do transformador (13:1)
+.subckt transf p1 p2 s1 s2
+* Lado primário
+Lprim p1 p2 10m
+* Lado secundário
+Lsec s1 s2 59.2u
+K1 Lprim Lsec 1
+.ends transf
+
+* Configurações da simulação
+.control
+  * Realiza a simulação transiente
+  tran 0.1ms 100ms
+  * Gera o gráfico da tensão de saída
+  plot v(n4, n5)
+  * Exporta os dados para um arquivo de texto
+
+  wrdata dados_saida.txt v(n4, n5)
+
+.endc
+
+.end

@@ -4,32 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context=".ui.simulador.SimuladorFragment">
 
     <TextView
         android:id="@+id/text_dashboard"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextServidor"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextServidor"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="651dp"
-        android:ems="10"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:hint="Servidor"
         android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:minHeight="48dp"
+        android:textSize="13sp"
+        android:padding="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_dashboard" />
@@ -37,93 +35,64 @@
     <EditText
         android:id="@+id/editTextUsuario"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="601dp"
-        android:ems="10"
         android:hint="Usuário"
         android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:minHeight="48dp"
+        android:textSize="13sp"
+        android:padding="6dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextServidor" />
 
     <EditText
         android:id="@+id/editTextSenha"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="552dp"
-        android:ems="10"
         android:hint="Senha"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:minHeight="48dp"
+        android:textSize="13sp"
+        android:padding="6dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextUsuario" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="411dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNetlist"
-        app:layout_constraintVertical_bias="0.049">
+        app:layout_constraintTop_toBottomOf="@+id/editTextSenha">
 
-        <Button
-            android:id="@+id/buttonAddResistor"
-            android:layout_width="0dp"
+        <EditText
+            android:id="@+id/editTextNetlist"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add Resistor" />
-
-        <Button
-            android:id="@+id/buttonAddCapacitor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add Capacitor" />
-
-        <Button
-            android:id="@+id/buttonAddIndutor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add Indutor" />
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/editTextNetlist"
-        android:layout_width="392dp"
-        android:layout_height="237dp"
-        android:background="@drawable/borda"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="Edite o netlist aqui"
-        android:inputType="textMultiLine"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSenha"
-        app:layout_constraintVertical_bias="0.109" />
+            android:background="@drawable/borda"
+            android:gravity="top"
+            android:hint="Edite o netlist aqui"
+            android:inputType="textMultiLine"
+            android:minHeight="100dp"
+            android:padding="6dp"
+            android:textSize="13sp" />
+    </ScrollView>
 
     <Button
         android:id="@+id/buttonConectar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginBottom="64dp"
         android:text="Conectar"
+        android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.11" />
+        app:layout_constraintHorizontal_bias="0.451"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
