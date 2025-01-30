@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.tcc.R
 import com.example.tcc.databinding.FragmentAulasBinding
 
 class AulasFragment : Fragment() {
@@ -30,10 +32,12 @@ class AulasFragment : Fragment() {
         // Configure os botões
         binding.buttonAnalogica.setOnClickListener {
             // Ação para o botão "Eletrônica Analógica"
+            findNavController().navigate(R.id.action_navigation_home_to_navigation_analog)
         }
 
         binding.buttonDigital.setOnClickListener {
             // Ação para o botão "Eletrônica Digital"
+            findNavController().navigate(R.id.action_navigation_home_to_navigation_dig)
         }
 
         return root

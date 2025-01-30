@@ -1,5 +1,6 @@
 package com.example.tcc.ui.simulador
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,9 +15,11 @@ import com.example.tcc.funcoes.carregarNetlist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 class SimuladorFragment : Fragment() {
 
+    private lateinit var diretorioLocal: File
     private lateinit var editTextUsuario: EditText
     private lateinit var editTextServidor: EditText
     private lateinit var editTextSenha: EditText
@@ -25,6 +28,8 @@ class SimuladorFragment : Fragment() {
     private lateinit var buttonAddResistor: Button
     private lateinit var buttonAddCapacitor: Button
     private lateinit var buttonAddIndutor: Button
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +50,17 @@ class SimuladorFragment : Fragment() {
         editTextServidor.setText("192.168.1.17")
         editTextSenha.setText("openssh2")
         val netlistContent = carregarNetlist(requireContext())  // Chama a função do arquivo Auxiliar.kt
-
+        fun getSimulacoesDirectory():File {
+            val context = requireContext()
+            // Cria o diretório 'simulacoes' no armazenamento interno
+            val directory = File(context.filesDir, "simulacoes")
+            if (!directory.exists()) {
+                directory.mkdirs()  // Cria o diretório caso não exista
+                Log.d("Storage","Criou diretorio simulacoes")
+            } else
+                Log.d("Storage","Nao criou diretorio simulacoes")
+            return directory
+        }
 
         editTextNetlist.setText(netlistContent)
         // Configure o listener do botão conectar
@@ -68,7 +83,8 @@ class SimuladorFragment : Fragment() {
 
 
                     ssh.enviarArquivoNetlist(usuario, servidor, senha, netlistContent)
-                    ssh.executarNgspice(usuario, servidor, senha)
+                    ssh.executarNgspice(usuario, servidor, senha,getSimulacoesDirectory() )
+
                 }
             } else {
                 // Mostre uma mensagem de erro ou faça alguma outra ação adequada

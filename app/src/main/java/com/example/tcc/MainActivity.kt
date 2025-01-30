@@ -36,12 +36,5 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
-    private fun getSimulacoesDirectory():File {
-        // Cria o diretório 'simulacoes' no armazenamento interno
-        val directory = File(filesDir, "simulacoes")
-        if (!directory.exists()) {
-            directory.mkdirs()  // Cria o diretório caso não exista
-        }
-        return directory
-    }
+
 }

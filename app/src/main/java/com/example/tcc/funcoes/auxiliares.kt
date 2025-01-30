@@ -17,3 +17,5 @@ fun carregarNetlist(context: Context): String {
         "* Erro ao carregar Netlist"  // Caso ocorra um erro, retorna uma mensagem de erro
     }
 }
+
+

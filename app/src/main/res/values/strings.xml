@@ -5,4 +5,154 @@
     <string name="title_notifications">Sobre</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    //importados do projeto antigo
+    <string name="eletronica_analogica">Eletronica Analogica</string>
+    <string name="eletronica_digital">Eletronica Digital</string>
+    <string name="sobre">Sobre</string>
+    <string name="text_sobre">Feito por Gabriel Ozorio</string>
+    <string name="voltar">Voltar</string>
+    <string name="teo">Teoria</string>
+    <string name="exe">Exercícios</string>
+    <string name="sim">Simulador</string>
+    <string name="titulo">Titulo</string>
+
+    <string-array name="teoDig">
+        <!-- as strings tem os nomes dos arquivos que serao utilizados no pdfView-->
+        <item>bases.pdf</item>
+        <item>ab.pdf</item>
+        <item>tdm.pdf</item>
+        <item>portas.pdf</item>
+        <item>mapa.pdf</item>
+        <item>flipflop.pdf</item>
+        <item>asincsinc.pdf</item>
+        <item>me.pdf</item>
+    </string-array>
+
+
+    <string-array name="exeDig">
+        <!-- as strings tem os nomes dos arquivos que serao utilizados no pdfView-->
+        <item>Ebases.pdf</item>
+        <item>Eab.pdf</item>
+        <item>Etdm.pdf</item>
+        <item>Eportas.pdf</item>
+        <item>Emapa.pdf</item>
+        <item>Eflipflop.pdf</item>
+        <item>Easincsinc.pdf</item>
+        <item>Eme.pdf</item>
+    </string-array>
+
+    <string-array name="teoAnalog">
+
+        <item>gef.pdf</item>
+        <item>kirchhoff.pdf</item>
+        <item>ohm.pdf</item>
+        <item>codCores.pdf</item>
+        <item>resistores.pdf</item>
+        <item>fontes.pdf</item>
+        <item>divisor.pdf</item>
+        <item>tellegen.pdf</item>
+        <item>nodmal.pdf</item>
+        <item>maxpot.pdf</item>
+        <item>thevenin.pdf</item>
+        <item>norton.pdf</item>
+        <item>capacitores.pdf</item>
+        <!-- fim dos temas de circuitos eletricos
+        inicio eletronica analogica -->
+        <item>diodo.pdf</item>
+        <item>zener.pdf</item>
+
+        <item>opamp.pdf</item>
+        <item>bjt.pdf</item>
+        <item>fet.pdf</item>
+        <item>ecomum.pdf</item>
+        <item>bcomum.pdf</item>
+        <item>ccomum.pdf</item>
+        <item>ampdif.pdf</item>
+        <item>ampme.pdf</item>
+    </string-array>
+
+    <string-array name="descAnalog">
+        <item>Grandezas Elétricas Fundamentais</item>
+        <item>Leis de Kirchhoff</item>
+        <item>Lei de Ohm</item>
+        <item>Codigo de Cores</item>
+        <item>Resistores</item>
+        <item>Fontes</item>
+        <item>Divisores(Tensão e Corrente)</item>
+        <item>Teorema de Tellegen</item>
+        <item>Análise de Nós e de Malhas</item>
+        <item>Máxima Transferencia de Potência</item>
+        <item>Teorema de Thevenin</item>
+        <item>Teorema de Norton</item>
+        <item>Capacitores</item>
+        <item>Diodo</item>
+        <item>Diodo Zener</item>
+        <item>Amplificador Operacional</item>
+        <item>Transistor Bipolar de Junção</item>
+        <item>Transistor de Efeito de Campo</item>
+        <item>Amplificador Emissor Comum</item>
+        <item>Amplificador Base Comum</item>
+        <item>Amplificador Coletor Comum</item>
+        <item>Amplificador Diferencial</item>
+        <item>Amplificador Multiplos Estágios</item>
+    </string-array>
+
+    <string-array name="descDigital">
+        <item>Bases Numéricas</item>
+        <item>Álgebra de Boole</item>
+        <item>Teorema de De Morgan</item>
+        <item>Portas Lógicas</item>
+        <item>Mapa de Karnaugh</item>
+        <item>Flip-Flops</item>
+        <item>Circuitos Síncronos e Assíncronos</item>
+        <item>Máquina de Estados</item>
+    </string-array>
+
+    <string-array name="exeAnalog">
+
+        <item>Egef.pdf</item>
+        <item>Ekirchhoff.pdf</item>
+        <item>Eohm.pdf</item>
+        <item>EcodCores.pdf</item>
+        <item>Eresistores.pdf</item>
+        <item>Efontes.pdf</item>
+        <item>Edivisor.pdf</item>
+        <item>Etellegen.pdf</item>
+        <item>Enodmal.pdf</item>
+        <item>Emaxpot.pdf</item>
+        <item>Ethevenin.pdf</item>
+        <item>Enorton.pdf</item>
+        <item>Ecapacitores.pdf</item>
+        <!-- fim dos temas de circuitos eletricos
+        inicio eletronica analogica -->
+        <item>Ediodo.pdf</item>
+        <item>Ezener.pdf</item>
+
+        <item>Eopamp.pdf</item>
+        <item>Ebjt.pdf</item>
+        <item>Efet.pdf</item>
+        <item>Eecomum.pdf</item>
+        <item>Ebcomum.pdf</item>
+        <item>Eccomum.pdf</item>
+        <item>Eampdif.pdf</item>
+        <item>Eampme.pdf</item>
+    </string-array>
+    <string name="title_activity_simulador">Simulador</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="simular">Simular</string>
+    <string name="checar">Checar</string>
+    <string name="instNetlist">Escreva o netlist do circuito</string>
+
 </resources>

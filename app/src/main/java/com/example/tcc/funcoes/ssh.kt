@@ -75,7 +75,7 @@ class SSH {
         }
     }
 
-    fun executarNgspice(usuario: String, servidor: String, senha: String) {
+    fun executarNgspice(usuario: String, servidor: String, senha: String, diretorioLocal: File) {
         val jsch = JSch()
         var session: Session? = null
         try {
@@ -93,7 +93,8 @@ class SSH {
 
             // Execute o comando ngspice
             val channelExec = session.openChannel("exec") as ChannelExec
-            channelExec.setCommand("ngspice_con -b $nomeArquivo")
+            //channelExec.setCommand("ngspice_con -b $nomeArquivo")
+            channelExec.setCommand("ngspice_con -b $nomeArquivo > resultado.txt")
             channelExec.connect()
             while (!channelExec.isClosed) {
                 Thread.sleep(100)
@@ -111,20 +112,69 @@ class SSH {
                 ssvChannel.setCommand("python ssvtojpg.py")
                 Log.d("SSH", "Executou metodo python.")
                 ssvChannel.connect()
-                while (!ssvChannel.isClosed) {
-                    Thread.sleep(100)
-                }
+            //    while (!ssvChannel.isClosed) {
+            //        Thread.sleep(100)
+            //    }
                 ssvChannel.disconnect()
                 Log.d("SSH", "Conversão para imagem realizada com sucesso.")
             }
-
-
+        transferGeneratedFiles(session, diretorioLocal)
+        Log.d("TRANSFER","Chegou no Transfer Generated Files")
 
         } catch (e: Exception) {
             Log.e("SSH", "Erro: ${e.message}")
         } finally {
             session?.disconnect()
             Log.d("SSH", "Sessão desconectada.")
+        }
+
+
+        }
+
+    }
+    fun transferGeneratedFiles(session: Session, diretorioLocal: File) {
+        val osInfo = detectarSistemaOperacional(session)  // Detecta o sistema operacional
+        val findCommand = getRecentFilesCommand(osInfo)
+        val channelSftp = session.openChannel("sftp") as ChannelSftp
+        channelSftp.connect()
+
+        try {
+            // Identificar arquivos modificados no servidor nos últimos 15 segundos
+            val findCommand = """find . -type f -cmin -0.25"""
+            val channelExec = session.openChannel("exec") as ChannelExec
+            channelExec.setCommand(findCommand)
+
+            val output = ByteArrayOutputStream()
+            channelExec.outputStream = output
+            channelExec.connect()
+
+            while (!channelExec.isClosed) {
+                Thread.sleep(100)
+            }
+
+            val recentFiles = output.toString().trim().split("\n")
+            channelExec.disconnect()
+
+            if (recentFiles.isEmpty()) {
+                Log.w("SSH", "Nenhum arquivo recente encontrado.")
+                return
+            }
+
+            // Transferir os arquivos para o diretório local
+            for (file in recentFiles) {
+                val localFile = File(diretorioLocal, File(file).name)
+                FileOutputStream(localFile).use { outputStream ->
+                    channelSftp.get(file.trim()).use { inputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+                Log.d("SSH", "Arquivo transferido: ${localFile.absolutePath}")
+            }
+
+        } catch (e: Exception) {
+            Log.e("SSH", "Erro ao transferir arquivos: ${e.message}")
+        } finally {
+            channelSftp.disconnect()
         }
     }
 
@@ -134,8 +184,38 @@ class SSH {
 
 
 
+         fun getRecentFilesCommand(osInfo: String): String {
+            return if (osInfo.contains("linux")) {
+                // Para Linux
+                """find . -type f -cmin -0.25"""  // Modificado nos últimos 15 segundos
+            } else if (osInfo.contains("windows")) {
+                // Para Windows (PowerShell)
+                """powershell -Command "Get-ChildItem -Path . -File | 
+            Where-Object { ($$.LastWriteTime -gt (Get-Date).AddSeconds(-15)) } |
+            ForEach-Object { $$.FullName }" """  // Modificado nos últimos 15 segundos
+            } else {
+                throw UnsupportedOperationException("Sistema operacional não suportado: $osInfo")
+            }
+        }
+
+        fun detectarSistemaOperacional(session: Session): String {
+            val osCheckCommand = "uname || powershell -Command \"(Get-WmiObject Win32_OperatingSystem).Caption\""
+            val channelExec = session.openChannel("exec") as ChannelExec
+            channelExec.setCommand(osCheckCommand)
+
+            val output = ByteArrayOutputStream()
+            channelExec.outputStream = output
+            channelExec.connect()
+
+            while (!channelExec.isClosed) {
+                Thread.sleep(100)
+            }
+
+            val osInfo = output.toString().trim().lowercase()
+            channelExec.disconnect()
+            return osInfo
+        }
 
 
 
 
-}
