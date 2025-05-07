@@ -38,6 +38,9 @@
             android:name=".ui.aulas.RecyclerActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
+        <activity android:name=".ui.simulador.ResultadoSimulacaoActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
 
     </application>
 

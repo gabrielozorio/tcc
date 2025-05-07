@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 
 class SimuladorViewModel : ViewModel() {
 
+
+
     private val _text = MutableLiveData<String>().apply {
         value = "This is simulador Fragment"
     }

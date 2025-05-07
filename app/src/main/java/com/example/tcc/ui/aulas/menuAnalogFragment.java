@@ -29,6 +29,7 @@ public class menuAnalogFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
     }
 
     @Override
@@ -38,7 +39,9 @@ public class menuAnalogFragment extends Fragment {
 
         View fview = inflater.inflate(R.layout.fragment_menu_analog, container, false);
 
-        final Button btnVoltar = (Button)fview.findViewById(R.id.buttonVolt1);
+
+
+        final Button btnVoltar = fview.findViewById(R.id.buttonVolt1);
         btnVoltar.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View fview) {
@@ -46,7 +49,7 @@ public class menuAnalogFragment extends Fragment {
             }
         });
 
-        final Button btnTeoAnalog = (Button)fview.findViewById(R.id.buttonTeoAnalog);
+        final Button btnTeoAnalog = fview.findViewById(R.id.buttonTeoAnalog);
         btnTeoAnalog.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View fview) {
@@ -57,7 +60,7 @@ public class menuAnalogFragment extends Fragment {
             }
         });
 
-        final Button btnExeAnalog = (Button)fview.findViewById(R.id.buttonExeAnalog);
+        final Button btnExeAnalog = fview.findViewById(R.id.buttonExeAnalog);
         btnExeAnalog.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View fview) {
@@ -70,13 +73,15 @@ public class menuAnalogFragment extends Fragment {
             }
         });
         /* Escrever a parte do simulador */
-        final Button btnSimulador = (Button)fview.findViewById(R.id.buttonSimAnalog);
+/*final Button btnSimulador = (Button)fview.findViewById(R.id.buttonSimAnalog);
         btnSimulador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                // Navigation.findNavController(view).navigate(R.id.action_menuAnalogFragment_to_simuladorAnalogFragment);
             }
         });
+
+    */
     return fview;
     }
 }

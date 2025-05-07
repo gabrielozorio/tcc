@@ -9,25 +9,23 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.tcc.R
 import com.example.tcc.funcoes.SSH
-import com.example.tcc.funcoes.carregarNetlist
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
 class SimuladorFragment : Fragment() {
 
-    private lateinit var diretorioLocal: File
+
     private lateinit var editTextUsuario: EditText
     private lateinit var editTextServidor: EditText
     private lateinit var editTextSenha: EditText
     private lateinit var editTextNetlist: EditText
     private lateinit var buttonConectar: Button
-    private lateinit var buttonAddResistor: Button
-    private lateinit var buttonAddCapacitor: Button
-    private lateinit var buttonAddIndutor: Button
+
+
 
 
 
@@ -37,6 +35,9 @@ class SimuladorFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_simulador, container, false)
+
+
+
 
         // Inicialize os elementos de UI
         editTextUsuario = root.findViewById(R.id.editTextUsuario)
@@ -49,7 +50,12 @@ class SimuladorFragment : Fragment() {
         editTextUsuario.setText("openssh2")
         editTextServidor.setText("192.168.1.17")
         editTextSenha.setText("openssh2")
-        val netlistContent = carregarNetlist(requireContext())  // Chama a função do arquivo Auxiliar.kt
+
+        val sharedPreferences = requireContext().getSharedPreferences("SimuladorPrefs", Context.MODE_PRIVATE)
+        val ultimoNetlist = sharedPreferences.getString("ultimoNetlist", "")
+        editTextNetlist.setText(ultimoNetlist)
+
+        //val netlistContent = carregarNetlist(requireContext())  // Chama a função do arquivo Auxiliar.kt
         fun getSimulacoesDirectory():File {
             val context = requireContext()
             // Cria o diretório 'simulacoes' no armazenamento interno
@@ -62,9 +68,18 @@ class SimuladorFragment : Fragment() {
             return directory
         }
 
-        editTextNetlist.setText(netlistContent)
+
+        //editTextNetlist.setText(netlistContent)
         // Configure o listener do botão conectar
         buttonConectar.setOnClickListener {
+
+            val simulacoesDir = getSimulacoesDirectory()
+            simulacoesDir.listFiles()?.forEach { file ->
+                if (file.isFile) {
+                    file.delete()
+                }
+            }
+
             val usuario = editTextUsuario.text.toString()
             val servidor = editTextServidor.text.toString()
             val senha = editTextSenha.text.toString()
@@ -75,23 +90,32 @@ class SimuladorFragment : Fragment() {
             if (usuario.isNotEmpty() && servidor.isNotEmpty() && senha.isNotEmpty() && netlistContent.isNotEmpty()) {
                 // Conecte-se ao servidor via SSH
 
-                CoroutineScope(Dispatchers.IO).launch {
+                fun salvarNetlist(netlistContent: String) {
+                    val sharedPreferences = requireContext().getSharedPreferences("SimuladorPrefs", Context.MODE_PRIVATE)
+                    with(sharedPreferences.edit()) {
+                        putString("ultimoNetlist", netlistContent)
+                        apply()
+                    }
+                }
+
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                //CoroutineScope(Dispatchers.IO).launch {
                     val ssh = SSH()
                    // val textosExtraidos = ssh.extrairAntesDeTxt(netlistContent)
                    // Log.d("Netlist", "Textos extraídos: $textosExtraidos")
                    // val context = this // 'this' se refere ao contexto da MainActivity
 
-
+                    salvarNetlist(netlistContent)
                     ssh.enviarArquivoNetlist(usuario, servidor, senha, netlistContent)
-                    ssh.executarNgspice(usuario, servidor, senha,getSimulacoesDirectory() )
+                    ssh.executarNgspice(usuario, servidor, senha,getSimulacoesDirectory(),requireContext())
 
                 }
             } else {
-                // Mostre uma mensagem de erro ou faça alguma outra ação adequada
+                Log.e("SimuladorFragment", "Preencha todos os campos antes de conectar.")
             }
         }
 
-        // Configure os listeners dos botões de adicionar componentes
+
 
 
         return root

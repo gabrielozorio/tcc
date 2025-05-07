@@ -40,8 +40,8 @@
         android:hint="Usuário"
         android:inputType="text"
         android:minHeight="48dp"
-        android:textSize="13sp"
         android:padding="6dp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextServidor" />
@@ -54,8 +54,8 @@
         android:hint="Senha"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textSize="13sp"
         android:padding="6dp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextUsuario" />

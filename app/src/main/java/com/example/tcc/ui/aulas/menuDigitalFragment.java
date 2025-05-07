@@ -63,14 +63,14 @@ public class menuDigitalFragment extends Fragment {
             }
         });
 
-        final Button btnSim = fview.findViewById(R.id.buttonSimDigital);
+    /*    final Button btnSim = fview.findViewById(R.id.buttonSimDigital);
         btnSim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               //  Navigation.findNavController(view).navigate(R.id.action_menuDigitalFragment_to_simuladorDigFragment);
             }
         });
-
+    */
         return fview;
     }
 }

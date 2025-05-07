@@ -1,21 +1,35 @@
 package com.example.tcc.funcoes
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
+import com.example.tcc.ui.simulador.ResultadoSimulacaoActivity
 import com.jcraft.jsch.*
+import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class SSH {
     private var nomeArquivo: String="iniciada"
+    private var nomeArquivoRaw: String = "iniciada"
     private var gerarImagem: Boolean=false
+    private var nomeWR: String="iniciada"
 
     fun setNomeArquivo(nome:String) { nomeArquivo=nome}
+    fun setNomeArquivoRaw(nome:String) { nomeArquivoRaw=nome}
     fun setGerarImagem(estado:Boolean) {gerarImagem=estado}
+    fun setNomeWR(nome:String) {nomeWR = nome}
+    private fun ajustarNetlistComWR(netlistContent: String, nomeWR: String): String {
+        val regex = Regex("wrdata .*\\.txt") // Procura por "wrdata" seguido de um nome de arquivo
+        return netlistContent.replace(regex, "wrdata $nomeWR")
+    }
+
+
     fun enviarArquivoNetlist(usuario: String, servidor: String, senha: String, netlistContent: String) {
         val jsch = JSch()
         var session: Session? = null
@@ -42,11 +56,19 @@ class SSH {
 
             // Criar o nome do arquivo no formato circuit_'nome-do-dispositivo'_'hora'.cir
             val fileName = "circuit_${deviceName}_$currentTime.cir"
-            setNomeArquivo(fileName)
+            setNomeArquivo(fileName) // arquivo com extensao .cir
+            setNomeArquivoRaw("circuit_${deviceName}_$currentTime") // arquivo sem extensao
+
+            // ajuste
+            val nomeWR = "circuit_${deviceName}_${currentTime}_wrdata.txt"
+            setNomeWR(nomeWR) // Armazena o nome do arquivo wrdata
+            val netlistContent2 = ajustarNetlistComWR(netlistContent,nomeWR)
+
             // Criar o arquivo temporário com esse nome
             val tempFile = File.createTempFile(fileName, null)
             val fos = FileOutputStream(tempFile)
-            fos.write(netlistContent.toByteArray())
+            if (netlistContent == netlistContent2) fos.write(netlistContent.toByteArray())
+            else fos.write(netlistContent2.toByteArray())
             fos.close()
 
             Log.d("SSH", "Enviando arquivo Netlist: $fileName")
@@ -75,7 +97,7 @@ class SSH {
         }
     }
 
-    fun executarNgspice(usuario: String, servidor: String, senha: String, diretorioLocal: File) {
+    fun executarNgspice(usuario: String, servidor: String, senha: String, diretorioLocal: File, context: Context) {
         val jsch = JSch()
         var session: Session? = null
         try {
@@ -94,7 +116,8 @@ class SSH {
             // Execute o comando ngspice
             val channelExec = session.openChannel("exec") as ChannelExec
             //channelExec.setCommand("ngspice_con -b $nomeArquivo")
-            channelExec.setCommand("ngspice_con -b $nomeArquivo > resultado.txt")
+            //channelExec.setCommand("ngspice -b $nomeArquivo > resultado_$nomeArquivoRaw.txt")
+            channelExec.setCommand("ngspice_con -b $nomeArquivo > resultado_$nomeArquivoRaw.txt")
             channelExec.connect()
             while (!channelExec.isClosed) {
                 Thread.sleep(100)
@@ -109,8 +132,10 @@ class SSH {
             if (gerarImagem) {
                 // Executar ssvtojpg.py
                 val ssvChannel = session.openChannel("exec") as ChannelExec
-                ssvChannel.setCommand("python ssvtojpg.py")
+                //ssvChannel.setCommand("python ssvtojpg.py")
+
                 Log.d("SSH", "Executou metodo python.")
+                ssvChannel.setCommand("python ssvtojpg3.py $nomeArquivoRaw")
                 ssvChannel.connect()
             //    while (!ssvChannel.isClosed) {
             //        Thread.sleep(100)
@@ -118,7 +143,7 @@ class SSH {
                 ssvChannel.disconnect()
                 Log.d("SSH", "Conversão para imagem realizada com sucesso.")
             }
-        transferGeneratedFiles(session, diretorioLocal)
+        transferGeneratedFiles(session, diretorioLocal, context)
         Log.d("TRANSFER","Chegou no Transfer Generated Files")
 
         } catch (e: Exception) {
@@ -131,90 +156,60 @@ class SSH {
 
         }
 
-    }
-    fun transferGeneratedFiles(session: Session, diretorioLocal: File) {
-        val osInfo = detectarSistemaOperacional(session)  // Detecta o sistema operacional
-        val findCommand = getRecentFilesCommand(osInfo)
+
+
+private fun transferGeneratedFiles(session: Session, diretorioLocal: File, context: Context) {
+    try {
         val channelSftp = session.openChannel("sftp") as ChannelSftp
         channelSftp.connect()
 
-        try {
-            // Identificar arquivos modificados no servidor nos últimos 15 segundos
-            val findCommand = """find . -type f -cmin -0.25"""
-            val channelExec = session.openChannel("exec") as ChannelExec
-            channelExec.setCommand(findCommand)
+        var pathServidor = channelSftp.pwd()
 
-            val output = ByteArrayOutputStream()
-            channelExec.outputStream = output
-            channelExec.connect()
-
-            while (!channelExec.isClosed) {
-                Thread.sleep(100)
-            }
-
-            val recentFiles = output.toString().trim().split("\n")
-            channelExec.disconnect()
-
-            if (recentFiles.isEmpty()) {
-                Log.w("SSH", "Nenhum arquivo recente encontrado.")
-                return
-            }
-
-            // Transferir os arquivos para o diretório local
-            for (file in recentFiles) {
-                val localFile = File(diretorioLocal, File(file).name)
-                FileOutputStream(localFile).use { outputStream ->
-                    channelSftp.get(file.trim()).use { inputStream ->
-                        inputStream.copyTo(outputStream)
-                    }
-                }
-                Log.d("SSH", "Arquivo transferido: ${localFile.absolutePath}")
-            }
-
-        } catch (e: Exception) {
-            Log.e("SSH", "Erro ao transferir arquivos: ${e.message}")
-        } finally {
-            channelSftp.disconnect()
+        // Create local directory if it doesn't exist
+        if (!diretorioLocal.exists()) {
+            diretorioLocal.mkdirs()
         }
+
+        // Transfer the simulation results file
+        val resultadoLocal = File(diretorioLocal, "resultado_$nomeArquivoRaw.txt")
+        Log.d("SSH", "Transferindo arquivo resultado.txt...")
+
+        Log.d("SSH","arquivo buscado: $pathServidor/resultado_$nomeArquivoRaw.txt")
+        channelSftp.get("resultado_$nomeArquivoRaw.txt", FileOutputStream(resultadoLocal))
+
+        // Transfer the graph image if it was generated
+        if (gerarImagem) {
+            try {
+                val imageFileName = "$nomeArquivoRaw.jpg"
+                val imageLocal = File(diretorioLocal, imageFileName)
+                Log.d("SSH", "Transferindo arquivo $imageFileName...")
+                TimeUnit.SECONDS.sleep(2)
+                channelSftp.get(imageFileName, FileOutputStream(imageLocal))
+                Log.d("SSH", "Arquivo de imagem transferido com sucesso")
+            } catch (e: SftpException) {
+                Log.e("SSH", "Erro ao transferir arquivo de imagem: ${e.message}")
+            }
+        }
+        channelSftp.disconnect()
+        Log.d("SSH", "Todos os arquivos foram transferidos com sucesso")
+
+        // Iniciar a atividade de resultado
+        val intent = Intent(context, ResultadoSimulacaoActivity::class.java).apply {
+            putExtra("arquivoResultado", resultadoLocal.absolutePath)
+            putExtra("nomeArquivoRaw", nomeArquivoRaw) // Passar o nome do arquivo raw
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+
+    } catch (e: Exception) {
+        Log.e("SSH", "Erro durante a transferência de arquivos: ${e.message}")
+        throw e
     }
+}
 
-    // Função para ler o conteúdo do Netlist
-
-
-
+}
 
 
-         fun getRecentFilesCommand(osInfo: String): String {
-            return if (osInfo.contains("linux")) {
-                // Para Linux
-                """find . -type f -cmin -0.25"""  // Modificado nos últimos 15 segundos
-            } else if (osInfo.contains("windows")) {
-                // Para Windows (PowerShell)
-                """powershell -Command "Get-ChildItem -Path . -File | 
-            Where-Object { ($$.LastWriteTime -gt (Get-Date).AddSeconds(-15)) } |
-            ForEach-Object { $$.FullName }" """  // Modificado nos últimos 15 segundos
-            } else {
-                throw UnsupportedOperationException("Sistema operacional não suportado: $osInfo")
-            }
-        }
-
-        fun detectarSistemaOperacional(session: Session): String {
-            val osCheckCommand = "uname || powershell -Command \"(Get-WmiObject Win32_OperatingSystem).Caption\""
-            val channelExec = session.openChannel("exec") as ChannelExec
-            channelExec.setCommand(osCheckCommand)
-
-            val output = ByteArrayOutputStream()
-            channelExec.outputStream = output
-            channelExec.connect()
-
-            while (!channelExec.isClosed) {
-                Thread.sleep(100)
-            }
-
-            val osInfo = output.toString().trim().lowercase()
-            channelExec.disconnect()
-            return osInfo
-        }
 
 
 

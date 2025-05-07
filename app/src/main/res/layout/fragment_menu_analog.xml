@@ -8,15 +8,14 @@
     tools:context=".ui.aulas.menuAnalogFragment">
 
 
-
     <Button
         android:id="@+id/buttonTeoAnalog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="47dp"
         android:text="@string/teo"
         app:layout_constraintBottom_toTopOf="@+id/buttonExeAnalog"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,32 +23,24 @@
         android:id="@+id/buttonExeAnalog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="332dp"
         android:text="@string/exe"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSimAnalog"
+        app:layout_constraintBottom_toTopOf="@+id/buttonVolt1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonTeoAnalog" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.067" />
 
     <Button
         android:id="@+id/buttonVolt1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="324dp"
+        android:layout_marginTop="342dp"
         android:text="@string/voltar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonSimAnalog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sim"
-        app:layout_constraintBottom_toTopOf="@+id/buttonVolt1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonExeAnalog" />
 </androidx.constraintlayout.widget.ConstraintLayout>

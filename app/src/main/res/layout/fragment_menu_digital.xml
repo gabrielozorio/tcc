@@ -9,45 +9,36 @@
 
     <Button
         android:id="@+id/buttonVolt2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="324dp"
+        android:layout_width="115dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="96dp"
         android:text="@string/voltar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonExeDigital" />
 
     <Button
         android:id="@+id/buttonTeoDigital"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="113dp"
+        android:layout_height="56dp"
         android:text="@string/teo"
         app:layout_constraintBottom_toTopOf="@+id/buttonExeDigital"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonSimDigital"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sim"
-        app:layout_constraintBottom_toTopOf="@+id/buttonVolt2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonExeDigital" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.645" />
 
     <Button
         android:id="@+id/buttonExeDigital"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/exe"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSimDigital"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonTeoDigital" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
