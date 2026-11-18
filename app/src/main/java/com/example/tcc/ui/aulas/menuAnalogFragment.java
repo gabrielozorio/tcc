@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.tcc.R;
@@ -53,10 +54,16 @@ public class menuAnalogFragment extends Fragment {
         btnTeoAnalog.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View fview) {
-                Context ct = fview.getContext();
-                Intent recycler = new Intent(ct, RecyclerActivity.class);
-                recycler.putExtra("opcao",0);
-                ct.startActivity(recycler);
+               // Context ct = fview.getContext();
+               // Intent recycler = new Intent(ct, RecyclerActivity.class);
+               // recycler.putExtra("opcao",0);
+               // ct.startActivity(recycler);
+
+                NavController navController = Navigation.findNavController(fview);
+                Bundle bundle = new Bundle();
+                bundle.putInt("opcao", 0);
+                navController.navigate(R.id.navigation_recycler, bundle);
+
             }
         });
 
@@ -66,10 +73,15 @@ public class menuAnalogFragment extends Fragment {
             public void onClick(View fview) {
 
 
-                Context ct = fview.getContext();
-                Intent recycler = new Intent(ct, RecyclerActivity.class);
-                recycler.putExtra("opcao",1);
-                ct.startActivity(recycler);
+               // Context ct = fview.getContext();
+               // Intent recycler = new Intent(ct, RecyclerActivity.class);
+               // recycler.putExtra("opcao",1);
+               // ct.startActivity(recycler);
+                NavController navController = Navigation.findNavController(fview);
+                Bundle bundle = new Bundle();
+                bundle.putInt("opcao", 1);
+                navController.navigate(R.id.navigation_recycler, bundle);
+
             }
         });
         /* Escrever a parte do simulador */

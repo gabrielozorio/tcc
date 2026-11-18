@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.tcc.R;
@@ -45,10 +46,15 @@ public class menuDigitalFragment extends Fragment {
         btnTeoria.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View fview) {
-                Context ct = fview.getContext();
-                Intent recycler = new Intent(ct, RecyclerActivity.class);
-                recycler.putExtra("opcao",2);
-                ct.startActivity(recycler);
+               // Context ct = fview.getContext();
+               // Intent recycler = new Intent(ct, RecyclerActivity.class);
+                //recycler.putExtra("opcao",2);
+                //ct.startActivity(recycler);
+
+                NavController navController = Navigation.findNavController(fview);
+                Bundle bundle = new Bundle();
+                bundle.putInt("opcao", 2);
+                navController.navigate(R.id.navigation_recycler, bundle);
             }
         });
 
@@ -56,10 +62,15 @@ public class menuDigitalFragment extends Fragment {
         btnExe.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View fview) {
-                Context ct = fview.getContext();
-                Intent recycler = new Intent(ct, RecyclerActivity.class);
-                recycler.putExtra("opcao",3);
-                ct.startActivity(recycler);
+                //Context ct = fview.getContext();
+                //Intent recycler = new Intent(ct, RecyclerActivity.class);
+                //recycler.putExtra("opcao",3);
+                //ct.startActivity(recycler);
+
+                NavController navController = Navigation.findNavController(fview);
+                Bundle bundle = new Bundle();
+                bundle.putInt("opcao", 3);
+                navController.navigate(R.id.navigation_recycler, bundle);
             }
         });
 

@@ -3,8 +3,13 @@ package com.example.tcc.funcoes
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
-import com.example.tcc.ui.simulador.ResultadoSimulacaoActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.example.tcc.R
+
 import com.jcraft.jsch.*
 import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
@@ -135,11 +140,13 @@ class SSH {
                 //ssvChannel.setCommand("python ssvtojpg.py")
 
                 Log.d("SSH", "Executou metodo python.")
+                //ssvChannel.setCommand(""""C:\Users\openssh2 && python ssvtojpg3.py $nomeArquivoRaw""")
                 ssvChannel.setCommand("python ssvtojpg3.py $nomeArquivoRaw")
+                Log.d("SSH","comando executado: python ssvtojpg3.py $nomeArquivoRaw")
                 ssvChannel.connect()
-            //    while (!ssvChannel.isClosed) {
-            //        Thread.sleep(100)
-            //    }
+                while (!ssvChannel.isClosed) {
+                    Thread.sleep(100)
+                }
                 ssvChannel.disconnect()
                 Log.d("SSH", "Conversão para imagem realizada com sucesso.")
             }
@@ -164,6 +171,7 @@ private fun transferGeneratedFiles(session: Session, diretorioLocal: File, conte
         channelSftp.connect()
 
         var pathServidor = channelSftp.pwd()
+        Log.d("IMG","pathServidor = $pathServidor")
 
         // Create local directory if it doesn't exist
         if (!diretorioLocal.exists()) {
@@ -194,12 +202,27 @@ private fun transferGeneratedFiles(session: Session, diretorioLocal: File, conte
         Log.d("SSH", "Todos os arquivos foram transferidos com sucesso")
 
         // Iniciar a atividade de resultado
-        val intent = Intent(context, ResultadoSimulacaoActivity::class.java).apply {
-            putExtra("arquivoResultado", resultadoLocal.absolutePath)
-            putExtra("nomeArquivoRaw", nomeArquivoRaw) // Passar o nome do arquivo raw
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+       // val intent = Intent(context, ResultadoSimulacaoActivity::class.java).apply {
+          //  putExtra("arquivoResultado", resultadoLocal.absolutePath)
+         //   putExtra("nomeArquivoRaw", nomeArquivoRaw) // Passar o nome do arquivo raw
+        //    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+       // }
+       // context.startActivity(intent)
+
+        val navHostFragment = (context as AppCompatActivity)
+            .supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val bundle = Bundle().apply {
+            putString("arquivoResultado",resultadoLocal.absolutePath)
+            putString("nomeArquivoRaw",nomeArquivoRaw)
         }
-        context.startActivity(intent)
+
+        navController.navigate(R.id.action_navigation_dashboard_to_navigation_resultado,bundle)
+        Log.d("SSH","Navegou para resultado xml")
+
+
 
     } catch (e: Exception) {
         Log.e("SSH", "Erro durante a transferência de arquivos: ${e.message}")

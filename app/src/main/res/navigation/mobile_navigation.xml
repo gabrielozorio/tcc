@@ -19,10 +19,51 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_recycler"
+        android:name="com.example.tcc.ui.aulas.RecyclerFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/recycler_fragment" >
+        <action
+            android:id="@+id/action_navigation_recycler_to_navigation_notifications"
+            app:destination="@id/navigation_notifications" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_pdf"
+        android:name="com.example.tcc.ui.aulas.PdfFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/pdf_fragment">
+        <argument
+            android:name="nomArq"
+            app:argType="string" />
+    </fragment>
+
+
+    <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.tcc.ui.simulador.SimuladorFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_simulador" />
+        tools:layout="@layout/fragment_simulador" >
+        <action
+            android:id="@+id/action_navigation_dashboard_to_navigation_resultado"
+            app:destination="@id/navigation_resultado" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_resultado"
+        android:name="com.example.tcc.ui.simulador.ResultadoSimulacaoFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_resultado_simulacao" >
+
+        <argument
+            android:name="arquivoResultado"
+            app:argType="string" />
+        <argument
+            android:name="nomeArquivoRaw"
+            app:argType="string" />
+
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -32,19 +73,31 @@
     <fragment
         android:id="@+id/navigation_analog"
         android:name="com.example.tcc.ui.aulas.menuAnalogFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_home"
         tools:layout="@layout/fragment_menu_analog" >
         <action
             android:id="@+id/action_navigation_analog_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_analog_to_navigation_recycler"
+            app:destination="@id/navigation_recycler" />
+        <action
+            android:id="@+id/action_navigation_analog_to_navigation_recycler2"
+            app:destination="@id/navigation_recycler" />
     </fragment>
     <fragment
         android:id="@+id/navigation_dig"
         android:name="com.example.tcc.ui.aulas.menuDigitalFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_home"
         tools:layout="@layout/fragment_menu_digital" >
         <action
             android:id="@+id/action_navigation_dig_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_dig_to_navigation_recycler"
+            app:destination="@id/navigation_recycler" />
+        <action
+            android:id="@+id/action_navigation_dig_to_navigation_recycler2"
+            app:destination="@id/navigation_recycler" />
     </fragment>
 </navigation>

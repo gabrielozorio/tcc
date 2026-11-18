@@ -13,6 +13,7 @@ import com.example.tcc.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: androidx.navigation.NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         //val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
-        var navController = navHostFragment.navController // Agora atribui para a variável global
+        navController = navHostFragment.navController // Agora atribui para a variável global
 
         // Configurar a navegação do BottomNavigationView
         val appBarConfiguration = AppBarConfiguration(
@@ -39,5 +40,9 @@ class MainActivity : AppCompatActivity() {
         if (intent.getBooleanExtra("navigateToSimulador", false)) {
             navController.navigate(R.id.navigation_dashboard)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

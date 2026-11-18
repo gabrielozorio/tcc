@@ -4,6 +4,8 @@ package com.example.tcc.ui.aulas;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tcc.R;
@@ -41,9 +45,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, PdfActivity.class);
-                intent.putExtra("nomArq",s1[position]); // passa o nome do arquivo pdf
-                context.startActivity(intent);  // inicia atividade do pdf
+               // Intent intent = new Intent(context, PdfActivity.class);
+               // intent.putExtra("nomArq",s1[position]); // passa o nome do arquivo pdf
+               // context.startActivity(intent);  // inicia atividade do pdf
+                NavController navController = Navigation.findNavController(view);
+                Bundle bundle = new Bundle();
+                bundle.putString("nomArq", s1[position]);
+
+                navController.navigate(R.id.navigation_pdf, bundle);
+
             }
 
         });

@@ -155,4 +155,13 @@
     <string name="checar">Checar</string>
     <string name="instNetlist">Escreva o netlist do circuito</string>
 
+
+    <string-array name="netlists_spice">
+        <item>* Netlist 0\nV1 1 0 DC 5\nR1 1 2 1k\n.end</item>
+        <item>* Netlist 1\nV1 1 0 DC 10\nR1 1 2 2k\nC1 2 0 1u\n.end</item>
+        <item>* Netlist 2\nVin in 0 SIN(0 1 1k)\nRload in 0 1k\n.end</item>
+        <!-- Adicione mais netlists conforme necessário -->
+    </string-array>
+
+
 </resources>
